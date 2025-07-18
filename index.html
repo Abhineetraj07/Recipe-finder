@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recipe Finder</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col items-center px-4 py-6 transition-colors duration-300" id="pageBody">
+
+ <!-- Top Actions -->
+<div class="flex justify-between items-center w-full max-w-6xl mb-6">
+  <div class="flex gap-4 ml-auto">
+    <button onclick="toggleDarkMode()" class="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded text-sm sm:text-base">🌙 Dark Mode</button>
+
+<button id="signupBtn" onclick="openSignupModal()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded text-sm sm:text-base">
+  🆕 Sign Up
+</button>
+
+    <!-- Login Button -->
+    <button id="loginBtn" onclick="openLoginModal()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm sm:text-base">
+      🔑 Login
+    </button>
+  </div>
+</div>
+</div>
+  <!-- Main Heading -->
+  <h1 class="text-3xl sm:text-4xl font-bold text-center mb-6 sm:mb-8 leading-snug">
+    🍽️ Explore Recipes <br class="block sm:hidden">from Around the World
+  </h1>
+
+  <!-- Search + Cuisine Filter -->
+  <div class="flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-3xl mb-10">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search by dish name, vegetable, or cuisine..."
+      class="p-3 rounded-lg text-gray-800 w-full sm:w-64 shadow-sm border border-gray-300 focus:outline-none"
+    />
+    
+    <select
+      id="cuisineSelect"
+      class="p-3 rounded-lg text-gray-800 border border-gray-300 shadow-sm w-full sm:w-auto"
+    >
+      <option value="">All Cuisines</option>
+      <option value="Indian">Indian</option>
+      <option value="South Indian">South Indian</option>
+      <option value="North Indian">North Indian</option>
+      <option value="Chinese">Chinese</option>
+      <option value="Italian">Italian</option>
+      <option value="Mexican">Mexican</option>
+      <option value="Thai">Thai</option>
+      <option value="French">French</option>
+    </select>
+
+    <button
+      onclick="searchRecipes()"
+      class="bg-green-500 hover:bg-green-600 px-6 py-3 rounded-lg text-white shadow-md text-sm sm:text-base w-full sm:w-auto"
+    >
+      Search
+    </button>
+  </div>
+
+  <!-- 🔄 Loader -->
+  <div id="loader" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <img src="https://media.giphy.com/media/Buva2aomcuXBAD07PC/giphy.gif" alt="Loading..." class="w-32 h-32 rounded-full">
+  </div>
+
+  <!-- 🍽️ Recipes Grid -->
+  <div id="recipesContainer" class="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full max-w-7xl px-2"></div>
+
+  <!-- 🎥 YouTube Videos -->
+  <div id="youtubeSection" class="mt-12 w-full max-w-7xl px-2">
+    <h2 class="text-xl sm:text-2xl font-semibold mb-4 text-center sm:text-left">🎥 YouTube Recipe Videos</h2>
+    <div id="youtubeContainer" class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"></div>
+  </div>
+
+<!-- ⭐ Favorites Section -->
+<div id="favoritesSection" class="mt-12 w-full max-w-7xl px-2">
+  <h2 class="text-xl sm:text-2xl font-semibold mb-4 text-center sm:text-left">⭐ Your Favorites</h2>
+  <div id="favoritesContainer" class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"></div>
+</div>
+<!-- 📝 Blog Section -->
+<div id="blogSection" class="mt-12 w-full max-w-7xl px-2 py-8 bg-gray-50 rounded-xl">
+  <h2 class="text-2xl font-bold mb-6 text-center">📝 Popular Recipe Blogs</h2>
+
+  <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+
+    <!-- Blog Card 1 -->
+    <div class="bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition">
+      <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60" alt="Healthy Salads" class="w-full h-40 object-cover">
+      <div class="p-4">
+        <h3 class="text-lg font-bold mb-2">5 Summer Salads 🌿</h3>
+        <p class="text-sm text-gray-600 mb-4">Delicious and healthy salad recipes for your summer meals.</p>
+        <a href="https://www.loveandlemons.com/salad-recipes/" target="_blank" class="text-blue-500 hover:underline">Read More</a>
+      </div>
+    </div>
+    <!-- Blog Card 2-->
+    <div class="bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition">
+      <img src="https://images.unsplash.com/photo-1506368249639-73a05d6f6488?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60" alt="Cooking Tips" class="w-full h-40 object-cover">
+      <div class="p-4">
+        <h3 class="text-lg font-bold mb-2">Quick Kitchen Tips ⏱️</h3>
+        <p class="text-sm text-gray-600 mb-4">Time-saving hacks for a faster and smoother cooking process.</p>
+        <a href="https://www.delish.com/kitchen-tips/" target="_blank" class="text-blue-500 hover:underline">Read More</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- 🍴 Ingredient Modal -->
+<div id="ingredientModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+  <div class="bg-white text-black rounded-lg p-6 max-w-md relative w-11/12 sm:w-auto">
+    <button onclick="closeModal()" class="absolute top-2 right-2 text-red-600 text-xl">×</button>
+    <h3 class="text-xl font-bold mb-4 text-center">🍴 Ingredients</h3>
+    <div id="ingredientContent" class="text-sm"></div> <!-- ✅ Present -->
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyC7d5pwxXnlcsK0PylRCF16nP-_WF2jn-o",
+    authDomain: "recipe-finder-d779e.firebaseapp.com",
+    projectId: "recipe-finder-d779e",
+    storageBucket: "recipe-finder-d779e.firebasestorage.app",
+    messagingSenderId: "102724187092",
+    appId: "1:102724187092:web:b1210f54e7aa95e1479c41",
+    measurementId: "G-L88XZ859TG"
+  };
+firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore(); 
+</script>
+  <!-- Bottom Navigation -->
+  <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300 flex justify-around py-2 sm:hidden">
+    <button class="flex flex-col items-center text-xs text-gray-700">
+      <span>🍽️</span>
+      <span>Recipes</span>
+    </button>
+    <button class="flex flex-col items-center text-xs text-gray-700">
+      <span>⭐</span>
+      <span>Favorites</span>
+    </button>
+    <button class="flex flex-col items-center text-xs text-gray-700">
+      <span>📝</span>
+      <span>Blog</span>
+    </button>
+  </div>
+<!-- 🔑 Login Modal -->
+<div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+  <div class="bg-white text-black rounded-lg p-6 max-w-sm w-11/12 relative">
+    
+    <!-- Close Button -->
+    <button onclick="closeLoginModal()" class="absolute top-2 right-2 text-red-600 text-xl">×</button>
+    
+    <!-- Heading -->
+    <h3 class="text-xl font-bold mb-4 text-center">🔑 Login</h3>
+    
+    <!-- ✅ Input fields with IDs -->
+    <input id="loginEmail" type="email" placeholder="Email" class="w-full mb-3 p-2 border rounded focus:outline-none">
+    <input id="loginPassword" type="password" placeholder="Password" class="w-full mb-4 p-2 border rounded focus:outline-none">
+    
+    <!-- ✅ Login Button calling submitLogin() -->
+    <button onclick="submitLogin()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded">
+      Login
+    </button> 
+  </div>
+</div>
+<!-- 🆕 Sign Up Modal -->
+<div id="signupModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+  <div class="bg-white text-black rounded-lg p-6 max-w-sm w-11/12 relative">
+
+    <button onclick="closeSignupModal()" class="absolute top-2 right-2 text-red-600 text-xl">×</button>
+    <h3 class="text-xl font-bold mb-4 text-center"> Sign Up</h3>
+
+    <input id="signupEmail" type="email" placeholder="Email" class="w-full mb-3 p-2 border rounded focus:outline-none">
+    <input id="signupPassword" type="password" placeholder="Password" class="w-full mb-4 p-2 border rounded focus:outline-none">
+
+    <button onclick="submitSignup()" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded">
+      Register
+    </button>
+  </div>
+</div>
+  </div>
+</div>
+<div id="pageFooter" class="mt-12 text-gray-500 text-center text-sm">
+  <p>© 2025 Recipe Finder. All rights reserved.</p>
+</div>
+  <script src="script.js"></script>
+</body>
+</html>
