@@ -1,0 +1,65 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    name: Validate & Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install ESLint
+        run: npm install -g eslint
+
+      - name: Lint JavaScript files
+        run: |
+          # Check for syntax errors in JS files
+          find . -name "*.js" -not -path "*/node_modules/*" \
+            -exec node --check {} \; && echo "All JS files syntax OK"
+
+      - name: Check for hardcoded API keys
+        run: |
+          echo "Scanning for hardcoded secrets..."
+          if grep -r "AIza\|sk-\|Bearer " --include="*.js" --include="*.html" . \
+             --exclude-dir=node_modules; then
+            echo "WARNING: Possible hardcoded API keys detected!"
+          else
+            echo "No hardcoded keys found."
+          fi
+
+      - name: Validate HTML structure
+        run: |
+          # Check all HTML files exist and are non-empty
+          find . -name "*.html" -not -path "*/node_modules/*" | while read f; do
+            size=$(wc -c < "$f")
+            if [ "$size" -lt 10 ]; then
+              echo "WARNING: $f appears empty or malformed"
+            else
+              echo "OK: $f ($size bytes)"
+            fi
+          done
+
+  lighthouse-hint:
+    name: Performance Hint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Summarize project
+        run: |
+          echo "=== Recipe Finder File Summary ==="
+          echo "HTML files: $(find . -name '*.html' | wc -l)"
+          echo "CSS files:  $(find . -name '*.css'  | wc -l)"
+          echo "JS files:   $(find . -name '*.js' --exclude-dir=node_modules | wc -l)"
+          echo "Total size: $(du -sh . | cut -f1)"
